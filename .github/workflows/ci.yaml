@@ -1,8 +1,17 @@
 name: PostgreSQL
 on: push
+
+env:
+  DOTNET_SDK_VERSION: 6.0.101
+  DOTNET_EF_VERSION: 6.0.1
+  SRC_DIR: ./src
+
 jobs:
   postgres:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src
     services:
       postgres:
         image: timescale/timescaledb:latest-pg14
@@ -18,10 +27,14 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ env.DOTNET_SDK_VERSION }}
       - name: Install PostgreSQL client
         run: |
-          sudo apt-get update
-          sudo apt-get install --yes postgresql-client
+          apt-get update
+          apt-get install --yes postgresql-client
       - name: Setup database
         run: psql -h postgres -U postgres -c 'CREATE DATABASE "ci_bots";'
         env:
