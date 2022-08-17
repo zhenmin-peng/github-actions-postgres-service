@@ -36,8 +36,8 @@ jobs:
         run: psql -h localhost -U postgres -c 'CREATE DATABASE "ci_bots";'
         env:
           PGPASSWORD: postgres
-      - name: Run migration script
-        run: psql -h localhost -d ci_bots -U postgres -f migration.sql
+      - name: Alter and run migration script
+        run: sed "s|SELECT create_hypertable|PERFORM create_hypertable|g" migration.sql | psql -h localhost -d ci_bots -U postgres
         env:
           PGPASSWORD: postgres
       - name: Query database - list all schemas
