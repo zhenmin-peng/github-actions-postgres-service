@@ -22,10 +22,10 @@ jobs:
           apt-get update
           apt-get install --yes postgresql-client
       - name: Setup database
-        run: psql -h postgres -U postgres -c 'CREATE DATABASE "ci_bots";'
+        run: psql -h localhost -U postgres -c 'CREATE DATABASE "ci_bots";'
         env:
           PGPASSWORD: postgres
       - name: Query database
-        run: psql -h postgres -d postgres -U postgres -c 'SELECT 1;'
+        run: psql -h localhost -d postgres -U postgres -c 'SELECT 1;'
         env:
           PGPASSWORD: postgres
