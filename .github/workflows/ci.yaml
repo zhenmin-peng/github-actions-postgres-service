@@ -9,9 +9,6 @@ env:
 jobs:
   postgres:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./src
     services:
       postgres:
         image: timescale/timescaledb:latest-pg14
@@ -33,21 +30,21 @@ jobs:
           dotnet-version: ${{ env.DOTNET_SDK_VERSION }}
       - name: Install PostgreSQL client
         run: |
-          apt-get update
-          apt-get install --yes postgresql-client
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
       - name: Setup database
-        run: psql -h postgres -U postgres -c 'CREATE DATABASE "ci_bots";'
+        run: psql -h localhost -U postgres -c 'CREATE DATABASE "ci_bots";'
         env:
           PGPASSWORD: postgres
       - name: Run migration script
-        run: psql -h postgres -d ci_bots -U postgres -f migration.sql
+        run: psql -h localhost -d ci_bots -U postgres -f migration.sql
         env:
           PGPASSWORD: postgres
       - name: Query database - list all schemas
-        run: psql -h postgres -d ci_bots -U postgres -c 'select schema_name from information_schema.schemata;'
+        run: psql -h localhost -d ci_bots -U postgres -c 'select schema_name from information_schema.schemata;'
         env:
           PGPASSWORD: postgres
       - name: Query database - list all tables in public schema
-        run: psql -h postgres -d ci_bots -U postgres -c 'SELECT * FROM information_schema.tables WHERE table_schema = "public";'
+        run: psql -h localhost -d ci_bots -U postgres -c 'SELECT * FROM information_schema.tables WHERE table_schema = "public";'
         env:
           PGPASSWORD: postgres
