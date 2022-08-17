@@ -1,0 +1,31 @@
+name: PostgreSQL
+on: push
+jobs:
+  postgres:
+    runs-on: ubuntu-latest
+    container: node:latest
+    services:
+      postgres:
+        image: timescale/timescaledb:latest-pg14
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Install PostgreSQL client
+        run: |
+          apt-get update
+          apt-get install --yes postgresql-client
+      - name: Setup database
+        run: psql -h postgres -U postgres -c 'CREATE DATABASE "ci_bots";'
+        env:
+          PGPASSWORD: postgres
+      - name: Query database
+        run: psql -h postgres -d postgres -U postgres -c 'SELECT 1;'
+        env:
+          PGPASSWORD: postgres
