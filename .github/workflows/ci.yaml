@@ -45,6 +45,6 @@ jobs:
         env:
           PGPASSWORD: postgres
       - name: Query database - list all tables in public schema
-        run: psql -h localhost -d ci_bots -U postgres -c 'SELECT * FROM information_schema.tables WHERE table_schema = "public";'
+        run: psql -h localhost -d ci_bots -U postgres -c "SELECT * FROM information_schema.tables WHERE table_schema = 'public';"
         env:
           PGPASSWORD: postgres
