@@ -3,7 +3,6 @@ on: push
 jobs:
   postgres:
     runs-on: ubuntu-latest
-    container: node:latest
     services:
       postgres:
         image: timescale/timescaledb:latest-pg14
