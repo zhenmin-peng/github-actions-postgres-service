@@ -37,7 +37,7 @@ jobs:
         env:
           PGPASSWORD: postgres
       - name: Setup database
-        run: psql -f configure_database.sql --variable=db_username=mytestuser --variable=db_password=pass123 -h localhost -U postgres -d ci_bots
+        run: sed -e "s/:db_username/mytestuser/" -e "s/:db_password/password123/" configure_database.sql | psql -h localhost -U postgres -d ci_bots
         env:
           PGPASSWORD: postgres
       - name: Alter and run migration script
