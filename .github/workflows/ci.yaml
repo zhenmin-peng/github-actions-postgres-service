@@ -32,8 +32,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --yes postgresql-client
-      - name: Setup database
+      - name: Create database
         run: psql -h localhost -U postgres -c 'CREATE DATABASE "ci_bots";'
+        env:
+          PGPASSWORD: postgres
+      - name: Setup database
+        run: psql -f configure_database.sql --variable=db_username=mytestuser --variable=db_password=pass123 -h localhost -U postgres -d ci_bots
         env:
           PGPASSWORD: postgres
       - name: Alter and run migration script
